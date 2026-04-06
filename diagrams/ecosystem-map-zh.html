@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM 知識工程生態系統地圖</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  .container { max-width: 1200px; width: 100%; }
+
+  .header { text-align: center; margin-bottom: 48px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .header .subtitle { font-size: 14px; color: #8b949e; }
+
+  .evolution { display: flex; justify-content: center; gap: 0; margin-bottom: 48px; }
+  .evo-stage { flex: 1; max-width: 320px; text-align: center; padding: 16px 24px; }
+  .evo-stage .year { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .evo-stage .name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .evo-stage .name-en { font-size: 11px; color: #8b949e; margin-bottom: 4px; }
+  .evo-stage .desc { font-size: 12px; color: #8b949e; line-height: 1.4; }
+  .evo-stage:nth-child(1) .name { color: #7ee787; }
+  .evo-stage:nth-child(2) .name { color: #79c0ff; }
+  .evo-stage:nth-child(3) .name { color: #d2a8ff; }
+  .evo-arrow { display: flex; align-items: center; color: #484f58; font-size: 24px; padding: 0 4px; margin-top: 20px; }
+
+  .columns { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0; align-items: start; }
+  .column { padding: 0 8px; }
+
+  .column-header { text-align: center; padding: 14px 20px; border-radius: 12px; margin-bottom: 16px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
+  .col-sources .column-header { background: linear-gradient(135deg, #1a3a2a, #162d22); border: 1px solid #238636; color: #7ee787; }
+  .col-context .column-header { background: linear-gradient(135deg, #1a2a3a, #162230); border: 1px solid #1f6feb; color: #79c0ff; }
+  .col-harness .column-header { background: linear-gradient(135deg, #2a1a3a, #221630); border: 1px solid #8957e5; color: #d2a8ff; }
+
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .card h3 { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .card .tag { font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 500; }
+  .col-sources .card h3 { color: #7ee787; }
+  .col-sources .tag { background: #1a3a2a; color: #7ee787; }
+  .col-context .card h3 { color: #79c0ff; }
+  .col-context .tag { background: #1a2a3a; color: #79c0ff; }
+  .col-harness .card h3 { color: #d2a8ff; }
+  .col-harness .tag { background: #2a1a3a; color: #d2a8ff; }
+  .card ul { list-style: none; padding: 0; }
+  .card li { font-size: 11px; color: #8b949e; padding: 2px 0; padding-left: 14px; position: relative; line-height: 1.5; }
+  .card li::before { content: '>'; position: absolute; left: 0; color: #484f58; font-family: monospace; }
+
+  .arrow-col { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 8px; min-height: 400px; }
+  .arrow-line { width: 40px; height: 2px; background: linear-gradient(90deg, #30363d, #484f58); position: relative; }
+  .arrow-line::after { content: ''; position: absolute; right: -6px; top: -4px; border-left: 8px solid #484f58; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+  .flow-label { font-size: 10px; color: #484f58; text-transform: uppercase; letter-spacing: 1.5px; writing-mode: vertical-rl; text-orientation: mixed; margin: 12px 0; }
+
+  .bottom-bar { margin-top: 40px; text-align: center; padding: 20px; border-top: 1px solid #21262d; }
+  .bottom-bar .insight { font-size: 13px; color: #8b949e; max-width: 700px; margin: 0 auto 12px; line-height: 1.6; }
+  .bottom-bar .insight strong { color: #e6edf3; }
+  .bottom-bar .credit { font-size: 11px; color: #484f58; }
+  .bottom-bar .credit a { color: #58a6ff; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>每個人都遺漏的地圖</h1>
+    <div class="subtitle">LLM 知識工程生態系統 -- 2026</div>
+  </div>
+
+  <div class="evolution">
+    <div class="evo-stage">
+      <div class="year">2022 -- 2024</div>
+      <div class="name">提示工程</div>
+      <div class="name-en">Prompt Engineering</div>
+      <div class="desc">「精心設計完美的提示詞」</div>
+    </div>
+    <div class="evo-arrow">--></div>
+    <div class="evo-stage">
+      <div class="year">2025</div>
+      <div class="name">上下文工程</div>
+      <div class="name-en">Context Engineering (Karpathy)</div>
+      <div class="desc">「動態建構上下文視窗」</div>
+    </div>
+    <div class="evo-arrow">--></div>
+    <div class="evo-stage">
+      <div class="year">2026</div>
+      <div class="name">系統編排工程</div>
+      <div class="name-en">Harness Engineering (Fowler, OpenAI)</div>
+      <div class="desc">「圍繞模型編排整個系統」</div>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column col-sources">
+      <div class="column-header">知識來源</div>
+      <div class="card">
+        <h3>RAG 管線 <span class="tag">Ch02</span></h3>
+        <ul>
+          <li>Self-RAG、Corrective RAG</li>
+          <li>Adaptive RAG、Agentic RAG</li>
+          <li>成本比長上下文低 1,250 倍</li>
+          <li>71% 企業使用 RAG</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>知識圖譜 <span class="tag">Ch02</span></h3>
+        <ul>
+          <li>Microsoft GraphRAG</li>
+          <li>實體關係推理</li>
+          <li>多跳查詢解析</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>長上下文視窗 <span class="tag">Ch02</span></h3>
+        <ul>
+          <li>1M+ token（Claude、Gemini）</li>
+          <li>適合靜態、有限範圍文件</li>
+          <li>「中間遺失」退化問題</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="arrow-col">
+      <div class="flow-label">輸入至</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="column col-context">
+      <div class="column-header">上下文工程</div>
+      <div class="card">
+        <h3>動態上下文組裝 <span class="tag">Ch03</span></h3>
+        <ul>
+          <li>六層上下文模型（Anthropic）</li>
+          <li>KV-cache 命中率 = 關鍵指標</li>
+          <li>100:1 輸入輸出比</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>系統提示詞 + 指令 <span class="tag">Ch03</span></h3>
+        <ul>
+          <li>規則、約束、角色設定</li>
+          <li>技能分發路由表</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>工具定義 + Schemas <span class="tag">Ch07</span></h3>
+        <ul>
+          <li>MCP 協議標準</li>
+          <li>每月 9,700 萬+ SDK 下載</li>
+          <li>Meta-tool 模式提升效率</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>對話 + 記憶 <span class="tag">Ch06</span></h3>
+        <ul>
+          <li>情節 / 語義 / 程序記憶</li>
+          <li>跨 session 持久化</li>
+          <li>Zettelkasten 啟發（A-MEM）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="arrow-col">
+      <div class="flow-label">塑造</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="column col-harness">
+      <div class="column-header">系統編排工程</div>
+      <div class="card">
+        <h3>技能系統 + 路由 <span class="tag">Ch05</span></h3>
+        <ul>
+          <li>70 萬+ 社區技能</li>
+          <li>Skill Graphs（arscontexta）</li>
+          <li>漸進式揭露路由</li>
+          <li>85-95% Token 節省</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Agent 架構 <span class="tag">Ch04</span></h3>
+        <ul>
+          <li>規劃者 / 生成者 / 評估者</li>
+          <li>Sprint 合約做品質管理</li>
+          <li>6 倍效能差距（Meta-Harness）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>安全 + 控制 <span class="tag">Ch04</span></h3>
+        <ul>
+          <li>引導（前饋）vs 感測（回饋）</li>
+          <li>計算性 vs 推理性控制</li>
+          <li>多層內容防護</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>MCP / 工具層 <span class="tag">Ch07</span></h3>
+        <ul>
+          <li>通用協議標準</li>
+          <li>Linux Foundation 治理</li>
+          <li>驗證、沙箱、審計追蹤</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="insight">
+      <strong>模型是 CPU。上下文是 RAM。Harness 是作業系統。</strong><br>
+      每一代包含前一代。系統編排工程包含上下文工程，上下文工程包含提示工程。
+    </div>
+    <div class="credit">
+      <a href="https://github.com/kennethlaw325/awesome-llm-knowledge-systems">awesome-llm-knowledge-systems</a> -- 第一份將 AI 知識生態系統每塊拼圖串起來嘅完整指南。
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
