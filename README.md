@@ -175,10 +175,12 @@ This guide is that missing layer. It connects RAG to context engineering, contex
 
 ## Contributing
 
-Contributions are welcome. This is a living document.
+Contributions are welcome! This list is community-maintained.
 
-- **Corrections**: If a claim is wrong or a source is outdated, open an issue with the correct information and a link.
-- **Additions**: New chapters, case studies, or diagrams -- open a PR with a clear description of what you're adding and why.
+- **Add a resource:** [Submit a Pull Request](../../pulls) -- see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
+- **Suggest a resource:** [Open an Issue](../../issues/new?template=suggest-resource.md)
+- **Report a broken link:** [Open an Issue](../../issues/new?template=report-broken-link.md)
+- **Discuss:** [Join the Discussion](../../discussions)
 - **Translations**: Translation PRs go in `/translations/`. Maintain the same file structure. Available translations: [繁體中文](translations/README-zh.md) | [简体中文](translations/README_zh-CN.md) | [日本語](translations/README_ja.md) | [한국어](translations/README_ko.md) | [Español](translations/README_es.md)
 
 Please keep the tone professional but accessible. Cite sources. No hype.
