@@ -36,6 +36,8 @@ The performance numbers are striking: a 26% improvement on LLM-judge evaluations
 
 In 2025, Mem0 secured a partnership with AWS, integrating into the Amazon Bedrock ecosystem and positioning itself as the default memory layer for enterprise AI deployments. The platform supports multi-tenant memory isolation, making it suitable for applications serving thousands of users, each with their own persistent memory space.
 
+**Mem0ᵍ (2026): Graph as First-Class Citizen.** The directed labeled graph variant, **Mem0ᵍ**, went to production in early 2026, replacing the earlier hybrid vector+graph design with a knowledge-graph-first architecture. The pipeline flows from an **Entity Extractor** through a **Relations Generator** that produces labeled triplets of the form `(source, relation, destination)` --- with typed edges like `lives_in`, `prefers`, and `owns` rather than untyped similarity links. A **Conflict Detector** paired with an **LLM-powered Update Resolver** handles contradictions as new facts arrive: when a new triplet disagrees with an existing one, the resolver decides whether to overwrite, merge, or keep both with provenance. Mem0ᵍ closes the long-standing gap between full-context approaches ("dump everything into the window") and selective retrieval ("find the top-k similar chunks") by giving memory a queryable semantic structure that can be navigated by relationship type, not just by vector distance.
+
 ### A-MEM
 
 [A-MEM](https://github.com/agiresearch/A-mem) takes a fundamentally different approach, drawing inspiration from the Zettelkasten method -- the note-taking system famously used by sociologist Niklas Luhmann to produce over 70 books across diverse fields.

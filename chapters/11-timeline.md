@@ -109,9 +109,41 @@ Two significant papers are published:
 
 MCP reaches 97 million monthly SDK downloads, a 12x increase from November 2025. The protocol is now embedded in CI/CD pipelines, IDE extensions, enterprise platforms, and consumer applications. The interoperability promise is being realized: a tool server written for one model works with any model.
 
-### April --- This Guide Published
+### April 2026 --- Initial Publication
 
 This research report is published, attempting to synthesize the preceding four years of rapid development into a coherent framework for practitioners. The field continues to evolve faster than any single document can capture.
+
+### March 31, 2026 --- Claude Code Source Leak
+
+Anthropic accidentally publishes a 59.8MB source map inside the npm package `@anthropic-ai/claude-code` v2.1.88, exposing approximately 513,000 lines of unobfuscated TypeScript across 1,906 files. The leak reveals a three-layer **"Self-Healing Memory"** architecture, with `MEMORY.md` acting as a lightweight pointer-style index rather than a full store. It also exposes the **KAIROS** feature flag --- an autonomous daemon mode referenced more than 150 times in the source --- alongside 44 other hidden feature flags for unreleased capabilities. Anthropic characterizes the incident as a "human packaging error, not a security breach." Even so, the leak delivers the first empirical look at what a production harness actually contains, and the term "harness engineering" begins appearing in vendor marketing and job descriptions in the days that follow. (Included here for April context.)
+
+### April 2, 2026 --- Microsoft MAI Models Launch
+
+Microsoft releases three first-party multimodal foundation models via Foundry: **MAI-Transcribe-1**, **MAI-Voice-1**, and **MAI-Image-2**. All three ship with built-in guardrails and enterprise-grade governance. This is Microsoft's first serious entry into the multimodal foundation model market as a model provider (not just a distributor of OpenAI's work), and it puts them in direct competition with OpenAI, Google, and Anthropic on voice, transcription, and image generation. These are multimodal models --- not safety harnesses.
+
+### April 3, 2026 --- The AI Velocity Paradox Report
+
+Harness.io and Infosys jointly publish the **"State of DevOps 2026"** report. The headline finding: **69% of teams report deployment bottlenecks despite 45% faster AI-assisted coding**. The report frames this as the "AI Velocity Paradox" --- generation speed is no longer the limiting factor, but evaluation, review, and governance have not kept pace. The narrative begins to shift from "generation speed" to "evaluation and governance" as the new bottleneck.
+
+### April 7, 2026 --- Claude Mythos Preview
+
+Anthropic releases **Claude Mythos Preview** (not Claude 4.6), scoring **93.9% on SWE-bench Verified** --- a 13.1 point leap over Opus 4.6's 80.8% --- and 77.8% on SWE-bench Pro. Mythos is not publicly available. It is reserved for the **Project Glasswing** coalition (Apple, Google, Microsoft, Amazon, and others) for cybersecurity research, with approximately 40 whitelisted teams getting access at $25 / $125 per million input / output tokens. This is the first time Anthropic has gated a flagship tier behind a research coalition rather than a public preview.
+
+### April 2026 --- MCP Dev Summit and SEP-1686 Tasks Primitive
+
+The MCP Dev Summit introduces **SEP-1686**, the Tasks primitive: a durable task state machine with five states (`working`, `input_required`, `completed`, `failed`, `cancelled`) for asynchronous MCP operations. The primitive enables a **call-now / fetch-later pattern** for long-running workflows --- data pipelines, code migrations, test execution, deep research --- by assigning each task an ID that can be correlated with later notifications. SEP-1686 ships as experimental in the April 2026 MCP spec and marks the protocol's first step from stateless RPC toward a true orchestration layer.
+
+### April 2026 --- Amazon Bedrock AgentCore Stateful MCP
+
+Amazon launches **Bedrock AgentCore Runtime**, the first production **bidirectional MCP runtime**. It adds two new server-initiated capabilities on top of the standard MCP surface: **elicitation**, in which the server pauses execution mid-workflow to request structured input from the user against a JSON schema, and **sampling**, in which the server requests LLM completions from the client without holding its own model credentials. Together, these complete the bidirectional MCP protocol implementation and let servers "drive" parts of the conversation rather than only responding to it.
+
+### April 2026 --- Google Agent Skills Spec
+
+The Google Developers Blog formalizes the **three-level progressive disclosure architecture** for agent skills: **L1 metadata** (~100 tokens per skill), **L2 instructions** (<5K tokens, loaded on demand), and **L3 external resources** (fetched only when needed). For an agent with 10 skills, baseline context usage drops from ~10K tokens to ~1K tokens --- a 90% reduction. Google adopts the universal **agentskills.io** specification, converging with the Anthropic standard published in December 2025 and promoting progressive disclosure from an Anthropic convention to a cross-vendor industry pattern.
+
+### April 2026 --- Mem0ᵍ Graph Memory Goes Production
+
+**Mem0ᵍ**, the directed labeled graph variant of Mem0, goes to production. The architecture flows from an **Entity Extractor** to a **Relations Generator**, producing labeled triplets of the form `(source, relation, destination)` with typed edges like `lives_in`, `prefers`, and `owns`. A **Conflict Detector** paired with an **LLM-powered Update Resolver** handles contradictions as new facts arrive. Mem0ᵍ closes the gap between "dump everything into context" and selective retrieval approaches by giving memory a queryable semantic structure.
 
 ---
 
@@ -125,7 +157,7 @@ Reading this timeline vertically, a pattern emerges:
 
 **2025**: Context engineering replaces prompt engineering. Skills, agents, and harnesses become the primary engineering surface. Open-source models commoditize the foundation layer. MCP becomes infrastructure.
 
-**2026**: The harness is the product. Skill management at scale is the new challenge. The 6x performance gap between naive and engineered harnesses makes the case: how you orchestrate the model matters more than which model you choose.
+**2026**: The harness is the product --- but by April, that framing is no longer enough. Stateful protocols (SEP-1686 Tasks, bidirectional MCP runtimes) turn MCP into an orchestration layer. Progressive disclosure becomes a cross-vendor standard. Graph memory (Mem0ᵍ) closes the gap between full-context and selective-retrieval approaches. And the AI Velocity Paradox reframes the frontier: generation is no longer the bottleneck --- evaluation and governance are. The 2026 narrative is **stateful protocols + bidirectional runtimes + progressive disclosure + graph memory + the velocity paradox**.
 
 The trajectory is clear. The next chapter of this story will not be about larger models. It will be about better systems.
 

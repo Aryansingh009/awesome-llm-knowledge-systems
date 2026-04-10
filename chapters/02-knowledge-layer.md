@@ -84,6 +84,12 @@ Standard RAG treats documents as independent chunks. This works for factual look
 
 The indexing cost of GraphRAG is significantly higher than standard RAG. Build the graph only when relationship reasoning is a core requirement, not as a default.
 
+### 2026 Evolution: KG as Semantic Backbone for Long Context
+
+Through 2024 and most of 2025, GraphRAG was framed as an **alternative to RAG** --- a different way to retrieve chunks for a model with a limited context window. By 2026, that framing has shifted. As frontier models push context windows into the multi-million-token range (Gemini 1.5 at 1M, Kimi past 2M Chinese characters, with further expansion underway), the question is no longer "how do we retrieve a small number of relevant chunks" but "how do we navigate a context that is already large enough to hold most of what we need."
+
+In that world, the knowledge graph stops being a **retrieval substitute** and becomes a **structured index layer for long context**. The graph is not there to decide which chunks to load --- the chunks are already in the window. The graph is there to give the model a semantic map of what is in the window: which entities are present, how they are related, which sections correspond to which topics, where contradictions live, and which multi-hop paths connect the question to the relevant evidence. GraphRAG re-emerges as a **semantic backbone** that lets an agent walk a million-token window efficiently, rather than as a workaround for the 8K-token windows it was born in.
+
 ---
 
 ## The 2025-2026 RAG Technique Landscape

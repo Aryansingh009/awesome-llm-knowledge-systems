@@ -119,6 +119,23 @@ Drawing from the SkillReducer findings and production experience, a set of skill
 - **Include trigger examples.** Provide 3-5 example user messages that should activate the skill. These serve as both documentation and test cases for the routing layer.
 - **Measure token cost.** Track the token count of each skill and set a budget. If a skill exceeds 2,000 tokens, consider whether it can be split or compressed.
 
+## 5.9 Industry Convergence: The Google Agent Skills Spec (April 2026)
+
+For most of 2025, progressive disclosure was primarily an Anthropic convention --- formalized through Claude Code skills in October 2025 and the agentskills.io open standard in December. In **April 2026**, the Google Developers Blog formalized its own **Agent Skills Spec**, adopting and extending the same architecture. The spec describes three explicit levels of progressive disclosure:
+
+- **Level 1 --- Metadata (~100 tokens per skill).** A compact descriptor containing the skill's name, one-line description, trigger hints, and version. Level 1 metadata for every available skill sits in the agent's baseline context. With 10 skills loaded, this is roughly 1,000 tokens of constant overhead.
+- **Level 2 --- Instructions (<5K tokens).** The full behavioral instructions for a skill, loaded on demand when Level 1 matching identifies the skill as relevant. Level 2 content never enters the context until the skill is actually selected.
+- **Level 3 --- External Resources.** Assets that live outside the context window entirely --- reference documents, datasets, tool schemas, code samples --- fetched only when the skill explicitly requires them during execution.
+
+The headline efficiency claim: for an agent with 10 skills, baseline context usage drops from roughly **10K tokens** (loading full skill content upfront) to approximately **1K tokens** (Level 1 metadata only), a **90% reduction**. Level 2 content loads one skill at a time, and Level 3 resources load only when needed during execution.
+
+Two details make the Google spec notable beyond the numbers:
+
+1. **It uses the universal `agentskills.io` specification.** Rather than forking, Google aligned its format with the open standard Anthropic published in December 2025. A skill authored against one spec can be consumed by agents on the other platform with minimal adaptation.
+2. **It promotes progressive disclosure from a convention to a formal system design pattern.** For roughly a year, progressive disclosure was described as "what Anthropic does with skills." With Google's adoption and formalization, it becomes a cross-vendor industry pattern with a named architecture and measurable targets --- comparable to how "MVC" or "REST" evolved from specific implementations into general-purpose patterns.
+
+The practical effect is that skill libraries are becoming portable across providers, and "how many tokens does your baseline agent context consume" has become a first-class metric that vendors compete on.
+
 ---
 
 ## Sources
