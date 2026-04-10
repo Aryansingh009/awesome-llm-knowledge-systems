@@ -99,13 +99,26 @@ This separation of concerns directly addresses two failure modes Anthropic ident
 
 A subtlety Anthropic emphasized: **evaluator calibration is itself a harness engineering problem.** An overly strict evaluator causes infinite revision loops. An overly lenient one passes low-quality work. The evaluator's threshold and criteria need tuning as carefully as the generator's instructions.
 
+### The Claude Code Leak: An Empirical Look (March 31, 2026)
+
+For most of 2025 the three-agent architecture was known through Anthropic's published research and inferred from behavior. On **March 31, 2026**, that changed. Anthropic accidentally published a 59.8MB source map inside the npm package **`@anthropic-ai/claude-code` v2.1.88**, exposing approximately **513,000 lines of unobfuscated TypeScript across 1,906 files**. Anthropic characterized the incident as a "human packaging error, not a security breach," but for the first time practitioners could read a production harness from a frontier lab directly.
+
+A few findings from the leak that reshape how the community describes the architecture:
+
+- **It is not literally "Planner / Generator / Evaluator."** Earlier community write-ups that mapped Claude Code onto the 4.6 three-role framing turned out to be a misreading of the research. The actual architecture is organized as a **three-layer "Self-Healing Memory"** system. The layers correspond to scratchpad / working state, compacted medium-term state, and durable project memory --- with explicit repair and reconciliation logic between layers.
+- **`MEMORY.md` is an index, not a store.** Rather than a monolithic memory file, `MEMORY.md` acts as a **lightweight index of pointers** into more detailed notes. This is closer to a filesystem directory than a transcript, and it is what allows the memory layer to scale without ballooning context.
+- **`KAIROS` is an autonomous daemon mode.** A feature flag called `KAIROS` is referenced **more than 150 times** across the source. It gates an autonomous daemon mode --- an unattended, long-running execution loop that goes well beyond the interactive REPL most users know.
+- **44 hidden feature flags.** Beyond `KAIROS`, the source contains 44 feature flags for unreleased capabilities, suggesting that what ships publicly is a conservative subset of what the harness actually supports internally.
+
+The practical upshot: the Planner / Generator / Evaluator split remains a useful conceptual taxonomy (and Anthropic's research papers still describe systems in those terms), but in production the architecture is layered around **memory and repair**, not around role decomposition alone. Harness engineering in 2026 increasingly means designing the memory layers and the transitions between them.
+
 ## 4.7 The Harness as Moat
 
 In early 2026, Meta acquired Manus for approximately $2 billion. Manus had no proprietary model. Its entire value was in the harness -- the orchestration logic, context engineering pipeline, tool integration layer, and operational infrastructure that turned commodity model APIs into a reliable agent product.
 
 This acquisition crystallized what the industry had been discovering: **the harness is the moat.** Models are increasingly commoditized. The differentiator is how you wrap them -- what tools you provide, how you manage context, how you handle failure, how you orchestrate multi-step workflows, and how you evaluate quality.
 
-The implication for practitioners is that harness engineering is not plumbing to get through on the way to the "real work" of model development. It *is* the real work for most production AI teams.
+The implication for practitioners is that harness engineering is not plumbing to get through on the way to the "real work" of model development. It *is* the real work for most production AI teams. By April 2026, "harness engineering" has entered the industry lexicon as a formal discipline, and the Claude Code leak provided the first empirical look at what a production harness actually contains.
 
 ## 4.8 Harness Maintenance: The Stress-Testing Imperative
 

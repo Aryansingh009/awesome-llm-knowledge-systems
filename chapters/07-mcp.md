@@ -39,6 +39,7 @@ The breadth of MCP adoption tells the story of its dominance:
 - **OpenAI** integrated MCP support into the ChatGPT platform and Agents SDK, enabling GPT models to use any MCP server.
 - **Google DeepMind** added MCP client support to Gemini, citing ecosystem compatibility as the primary motivation.
 - **Microsoft** went furthest, building MCP support into Windows at the OS level and integrating it across Azure AI services, Copilot, and GitHub Copilot.
+- **Amazon / AWS** shipped **Bedrock AgentCore Runtime** in April 2026 as the first production bidirectional MCP runtime, adding elicitation and sampling on top of the standard protocol (see "The Stateful MCP Transition" below).
 - **GitHub** rebuilt its Copilot extensions system on MCP, replacing their proprietary tool format.
 - **Figma, Slack, Block, Notion** all ship official MCP servers, making their platforms first-class citizens in any AI workflow.
 - **Hugging Face** hosts a registry of community MCP servers alongside its model hub.
@@ -79,6 +80,29 @@ Despite its success, MCP faces significant open challenges:
 **Schema versioning.** When an MCP server updates its tool schemas, existing clients may break. The protocol lacks a built-in versioning and compatibility negotiation mechanism.
 
 **Tool overlap.** With thousands of community servers, multiple servers often provide overlapping functionality. The protocol provides no mechanism for deduplication or preference expression.
+
+## 2026: The Stateful MCP Transition
+
+Through its first eighteen months, MCP was a fundamentally **stateless RPC protocol**: a client calls a server, the server returns a result, and the conversation moves on. This model worked well for simple tool calls (read a file, query an API, post a message) but struggled with anything long-running or interactive. In April 2026, two developments began pushing MCP toward a true orchestration layer.
+
+**SEP-1686: The Tasks Primitive.** Introduced at the April 2026 MCP Dev Summit, **SEP-1686** adds a durable task state machine to the protocol. Each long-running tool invocation becomes a **task** with a persistent ID and one of five states: `working`, `input_required`, `completed`, `failed`, or `cancelled`. Clients can start a task, disconnect, and later reconnect to check status or fetch results --- a **call-now / fetch-later** pattern. Task IDs are correlated with server-sent notifications so clients can subscribe to progress events without holding open connections. The primitive is aimed squarely at workflows that MCP previously forced into bespoke workarounds:
+
+- **Data pipelines** that take minutes or hours to complete
+- **Code migrations** across large repositories
+- **Test execution** for full CI suites
+- **Deep research** that spawns sub-agents and waits on external APIs
+- **Multi-agent systems** where one agent hands work to another asynchronously
+
+SEP-1686 ships as experimental in the April 2026 MCP spec. It is the first serious step from stateless RPC toward durable, resumable orchestration.
+
+**Amazon Bedrock AgentCore: The First Bidirectional Runtime.** Also in April 2026, AWS ships **Bedrock AgentCore Runtime**, the first production MCP runtime to implement **bidirectional** communication. Standard MCP is client-initiated: the client calls tools, the server responds. AgentCore adds two server-initiated capabilities:
+
+- **Elicitation.** Mid-execution, a server can pause and request structured input from the user against a JSON schema. This turns multi-step workflows that previously needed a custom UI layer into protocol-level interactions. A migration tool can stop and ask, "which branch should I target?" with a typed response.
+- **Sampling.** A server can request LLM-generated completions from the client, without holding its own model credentials. The server provides a prompt and sampling parameters; the client runs its own model and returns the completion. This lets tool servers do LLM-powered work (summarization, classification, extraction) while the user's model, quota, and billing stay on the client side.
+
+Together, elicitation and sampling complete MCP's bidirectional protocol surface. Servers can now **drive** parts of the conversation rather than only respond to calls.
+
+**Implications.** The 2025 framing of MCP was "a uniform plug for stateless tools." The 2026 framing is broader: MCP is becoming the protocol layer for **stateful, interactive, bidirectional agent orchestration**. Tool servers are no longer passive --- they can hold durable state, pause for user input, and request LLM work from the client. For knowledge engineering, this means long-running retrieval pipelines, staged data enrichment, and human-in-the-loop workflows finally have a native protocol to run on.
 
 ## Market Context
 

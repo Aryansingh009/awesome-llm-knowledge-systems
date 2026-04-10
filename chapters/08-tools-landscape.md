@@ -14,7 +14,7 @@ Notion commands roughly 25% of the collaborative knowledge management market, ma
 
 **Notion 3.0** (September 2025) marked a fundamental shift: Notion rebuilt its AI layer from an autocomplete feature into an autonomous agent. Rather than suggesting completions or answering queries about your workspace, Notion's AI agent can now independently navigate your workspace, create and modify pages, update databases, and execute multi-step workflows. It understands your workspace structure, cross-references information across pages, and maintains context about your organizational patterns.
 
-In January 2026, Notion introduced multi-model support, allowing users to route different tasks to different models: GPT-5.2 for creative writing, Claude Opus 4.5 for analytical tasks, Gemini 3 for multimodal work. This model-routing approach reflects a maturing understanding that no single model excels at everything, and that the knowledge management layer should be model-agnostic.
+In January 2026, Notion introduced multi-model support, allowing users to route different tasks to different models: GPT-5.2 for creative writing, Claude Opus 4.6 for analytical tasks, Gemini 3 for multimodal work. This model-routing approach reflects a maturing understanding that no single model excels at everything, and that the knowledge management layer should be model-agnostic.
 
 Notion's strength is its combination of structured data (databases, relations, rollups) with unstructured content (pages, blocks). This hybrid structure gives AI agents rich metadata to work with -- not just text to search, but typed properties, relations between entities, and explicit hierarchies.
 
@@ -77,6 +77,20 @@ The tools in this chapter are not separate from the knowledge engineering ecosys
 **MCP** from Chapter 7 is increasingly the protocol these tools use to connect to external data sources, enabling your knowledge base to pull from GitHub, Slack, email, and databases through a standardized interface.
 
 These tools are where the abstract principles of knowledge engineering become concrete daily practice. They are the harness through which individuals implement RAG, memory, and context engineering for their personal and professional knowledge.
+
+## The AI Velocity Paradox
+
+Alongside the tools landscape for *personal* knowledge management, a parallel story is playing out in developer tooling --- and in April 2026 it produced one of the year's most discussed data points. Harness.io and Infosys jointly published the **"State of DevOps 2026"** report, and the headline finding became known as the **AI Velocity Paradox**:
+
+> **69% of teams report deployment bottlenecks despite 45% faster AI-assisted coding.**
+
+The mechanics are straightforward. AI coding assistants (Copilot, Cursor, Claude Code, Codex) have made code generation dramatically faster. More PRs open, more diffs arrive, more candidate implementations pile up at the review and deploy stages. But the systems downstream of generation --- code review, test infrastructure, security scanning, compliance checks, deployment pipelines, incident response --- have not scaled at the same rate. Generation is no longer the constraint. **Evaluation and governance are the new constraint.**
+
+The report gave a name to the pattern that practitioners had been calling, privately, a dozen different things: **"Harness Fatigue."** It describes the struggle teams face trying to build automated guardrails for AI-generated code at the rate the generation itself is happening. Every new model release makes the problem worse by making it easier to produce more code that needs review.
+
+The framing lands the same point this report has been making from Chapter 4 onward, but from the opposite direction: when the industry talked about "the harness is the moat" through 2025, the subtext was that engineering teams who built great harnesses would pull ahead. In 2026, the Velocity Paradox turns the same observation into a warning: teams that scale generation without scaling the evaluation and governance layers find themselves going slower overall, not faster. The bottleneck has moved, but the total throughput hasn't necessarily improved.
+
+The practical takeaway for knowledge engineering: the "harness" is no longer just the thing that wraps the model for production use. It is also the thing that has to scale in lockstep with generation speed --- or deployment throughput silently caps out while everyone insists the AI is making them faster.
 
 ## Sources
 
