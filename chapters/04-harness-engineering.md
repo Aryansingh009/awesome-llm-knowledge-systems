@@ -184,6 +184,22 @@ The tradeoff is a new ceiling. A managed primitive prices itself by trigger and 
 
 The honest framing for harness engineers in 2026: cloud-native primitives like Routines are the right answer for the **GitHub-event-triggered, scheduled, API-called** quadrant of the harness workload, and they are likely to compress that quadrant's operational cost dramatically over the next twelve months. The self-hosted harness is not going away --- it is being narrowed to where it actually pays for itself. The discipline to develop is the same discipline this chapter has been building toward: knowing which assumption each component encodes, and noticing when the substrate underneath it changes.
 
+## 4.10 The Managed-Inference Turn (April 2026)
+
+Through 2025, the harness contract between caller and model was largely a knob panel: `temperature`, `top_p`, `top_k`, `max_tokens`, `budget_tokens`, system prompt. Practitioners turned those knobs case by case, sometimes per-step within the same agentic loop. The April 16, 2026 release of **Claude Opus 4.7** broke that pattern. In a single release, three changes pulled in the same direction:
+
+1. **`temperature`, `top_p`, and `top_k` are deprecated.** Any non-default value returns a 400 error. Sampling-level control is no longer in the caller's hands.
+2. **Adaptive thinking is the only thinking-on mode.** Manual `budget_tokens` (extended thinking) is removed; `effort` (`low`, `high`, `xhigh`, `max`) replaces it.
+3. **Task budgets become a first-class primitive.** A new beta header (`anthropic-beta: task-budgets-2026-03-13`) lets the caller declare an advisory token budget for the *entire agentic loop* --- thinking, tool calls, tool results, final output. The model sees a running countdown as it works.
+
+The first two changes are subtractive: knobs removed. The third is additive: a primitive that did not exist before in any frontier API. Together they describe a contract change. Instead of "you tune the sampler and the model produces a response," the contract is now "you declare a compute budget and the model self-allocates against it, deciding step by step how much searching, reasoning, and synthesis the task still deserves." The harness becomes a budget conversation rather than a parameter board.
+
+The "advisory rather than enforced" detail matters. Task budgets are not a hard cap (`max_tokens` still serves that role and remains caller-facing only). Instead, the model is told its budget and uses it to prioritize. In practice, a budget set too tight produces refusal-style outputs rather than degraded ones --- the model prefers to decline than to ship a result it judges underfunded. A 20K-token minimum is enforced precisely to prevent that failure mode for non-trivial tasks.
+
+For harness designers, the implication is concrete: any harness that ran on Opus 4.6 needs re-baselining for 4.7, not just at the prompt level but at the timeout, retry, compaction, and tool-call-budget level. Anthropic's own migration documentation says this directly --- *re-baseline the harness, not just the prompt*. The Advisor Tool (Section 4.5) and task budgets (this section) describe a new two-axis optimization for any long-horizon harness: Advisor decides *what* to think about; task budgets decide *how hard* to think about each step. Both replace knob-twiddling with measured signals computed at runtime.
+
+This is the broader pattern: **the managed-inference turn.** Frontier vendors are increasingly treating inference itself as a product surface, not a parameter surface. The harness layer is moving from "you configure the inference call" to "you describe the work and the inference layer adapts." Whether other labs follow Anthropic's specific decisions (sampling-knob deprecation, advisory budgets) or only the direction is the open question. The direction itself looks settled.
+
 ---
 
 ## Sources
@@ -201,6 +217,11 @@ The honest framing for harness engineers in 2026: cloud-native primitives like R
 - **"CATTS: Consensus-Aware Test-Time Scaling for Agents."** arXiv 2602.12276 (April 2026 release cycle). Vote-derived uncertainty as a test-time compute allocator; +9.1% / 2.3x fewer tokens vs. uniform scaling on WebArena-Lite and GoBrowse. [https://arxiv.org/abs/2602.12276](https://arxiv.org/abs/2602.12276)
 - **Anthropic.** "Introducing Routines in Claude Code." Anthropic blog, April 14, 2026. [https://claude.com/blog/introducing-routines-in-claude-code](https://claude.com/blog/introducing-routines-in-claude-code)
 - **Anthropic.** "Claude Code Routines documentation." [https://code.claude.com/docs/en/routines](https://code.claude.com/docs/en/routines) --- triggers (schedule / API / GitHub event), quotas (Pro 5/day, Max 15/day, Team/Enterprise 25/day), cloud-side execution semantics.
+- **Anthropic.** "Introducing Claude Opus 4.7" (April 16, 2026). [https://www.anthropic.com/news/claude-opus-4-7](https://www.anthropic.com/news/claude-opus-4-7)
+- **Anthropic.** "What's new in Claude Opus 4.7" (API documentation). [https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-7](https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-7) --- task budgets (`anthropic-beta: task-budgets-2026-03-13`, advisory, 20K minimum), adaptive-only thinking, removal of `temperature` / `top_p` / `top_k`.
+- **Caylent.** "Claude Opus 4.7 Deep Dive: Capabilities, Migration, and the New Economics of Long-Running Agents" (April 2026). [https://caylent.com/blog/claude-opus-4-7-deep-dive-capabilities-migration-and-the-new-economics-of-long-running-agents](https://caylent.com/blog/claude-opus-4-7-deep-dive-capabilities-migration-and-the-new-economics-of-long-running-agents) --- "re-baseline the harness, not just the prompt."
+- **Archon GitHub Repository.** [https://github.com/coleam00/Archon](https://github.com/coleam00/Archon) --- TypeScript / Bun harness builder, YAML DAG workflows wrapping Claude Code and OpenAI Codex CLI; v2.1 shipped April 2026.
+- **OpenHarness GitHub Repository.** [https://github.com/HKUDS/OpenHarness](https://github.com/HKUDS/OpenHarness) --- Python reference implementation from Hong Kong University Data lab; first commit April 1, 2026.
 
 ### Further reading for beginners
 

@@ -140,6 +140,9 @@ Hidden instructions given to an AI model before your conversation begins, settin
 
 ### T
 
+**Task Budget**
+A harness primitive introduced by Anthropic in Claude Opus 4.7 (April 2026, beta header `anthropic-beta: task-budgets-2026-03-13`). The caller declares an advisory token budget for an entire agentic loop --- thinking, tool calls, tool results, final output --- and the model receives a running countdown as it works, using it to decide how much searching, reasoning, and synthesis a step still deserves. Distinct from `max_tokens`, which is a hard cap that is not visible to the model. Budgets are advisory rather than enforced, with a 20K-token minimum to prevent degenerate refusal behavior on tight budgets. Task budgets are the first vendor-shipped primitive that exposes "how hard to think about each step" as a managed contract rather than a hand-tuned parameter.
+
 **Titans**
 Google Research's April 2026 architecture family in which memory is a trainable neural module that updates itself by gradient descent at inference time, rather than an external vector store or a fixed attention window. At comparable parameter counts Titans reportedly outperforms Mamba-2, Gated DeltaNet, and Transformer++ on long-range recall and multi-hop reasoning benchmarks, blurring the line between "context" and "fine-tuning."
 
